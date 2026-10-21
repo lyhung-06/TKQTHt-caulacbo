@@ -1,0 +1,57 @@
+{
+  "annotations": { "list": [] },
+  "editable": false,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [{ "expr": "sum by (status_code) (rate(club_http_requests_total[5m]))", "legendFormat": "HTTP {{status_code}}", "refId": "A" }],
+      "title": "Application HTTP responses by status",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by (le, method) (rate(club_http_request_duration_seconds_bucket[5m])))", "legendFormat": "{{method}} p95", "refId": "A" }],
+      "title": "Application response time (p95)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "id": 3,
+      "targets": [{ "expr": "nginx_connections_active", "legendFormat": "Active", "refId": "A" }],
+      "title": "Nginx active connections",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "id": 4,
+      "targets": [{ "expr": "rate(nginx_http_requests_total[5m])", "legendFormat": "Requests/s", "refId": "A" }],
+      "title": "Nginx request rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short", "mappings": [{ "options": { "0": { "color": "red", "text": "DOWN" }, "1": { "color": "green", "text": "UP" } }, "type": "value" }] }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "id": 5,
+      "targets": [{ "expr": "up{job=\"web\"}", "legendFormat": "Web app", "refId": "A" }],
+      "title": "Web application scrape health",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["club", "web", "nginx"],
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Club - Web and Nginx",
+  "uid": "club-web-nginx",
+  "version": 1
+}

@@ -1,0 +1,59 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: club-security
+    folder: Security
+    interval: 1m
+    rules:
+      - uid: club-login-bruteforce
+        title: Club login brute-force attempts
+        condition: B
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 60
+              to: 0
+            datasourceUid: loki
+            model:
+              datasource:
+                type: loki
+                uid: loki
+              editorMode: code
+              expr: sum(count_over_time({job="webapp"} | json | event="LOGIN_FAILED" [1m]))
+              queryType: instant
+              refId: A
+              maxDataPoints: 43200
+              intervalMs: 1000
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 4
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - A
+                  reducer:
+                    type: last
+                    params: []
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              reducer: last
+              refId: B
+              type: threshold
+        noDataState: NoData
+        execErrState: Error
+        for: 0s
+        annotations:
+          summary: Repeated failed logins detected
+          description: More than 4 failed login attempts occurred within one minute. In Grafana Explore, query {job="webapp"} | json | event="LOGIN_FAILED", inspect ip/user/timestamp fields, and correlate the same time window with {job="nginx"} | json.
+        labels:
+          severity: critical
