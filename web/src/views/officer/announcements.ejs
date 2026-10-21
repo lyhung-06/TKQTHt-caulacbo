@@ -1,0 +1,18 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid"><%- include('_nav') %><section>
+  <div class="card"><div class="section-heading"><div><p class="section-eyebrow">Truyền thông nội bộ</p><h1>Quản lý thông báo</h1></div></div>
+    <form method="POST" action="/officer/announcements">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group"><label class="form-label" for="announcement-title">Tiêu đề</label><input class="form-control" id="announcement-title" name="title" maxlength="255" required></div>
+      <div class="form-group"><label class="form-label" for="announcement-content">Nội dung</label><textarea class="form-control" id="announcement-content" name="content" rows="6" required></textarea></div>
+      <div class="form-group"><label class="form-label" for="announcement-status">Trạng thái</label><select class="form-control" id="announcement-status" name="status"><option value="published">Đăng ngay</option><option value="draft">Bản nháp</option></select></div>
+      <button class="btn btn-primary" type="submit">Lưu thông báo</button>
+    </form>
+  </div>
+  <div class="card"><div class="card-title">Thông báo đã tạo</div>
+    <% if (announcements.length) { %><div class="announcement-list"><% announcements.forEach(item => { %><article class="announcement-item"><div class="event-topline"><h3><%= item.title %></h3><span class="badge badge-<%= item.status === 'published' ? 'published' : 'draft' %>"><%= item.status %></span></div><p style="white-space:pre-line"><%= item.content %></p><small><%= new Date(item.published_at).toLocaleString('vi-VN') %> · <%= item.author_name || 'Hệ thống' %></small></article><% }) %></div><% } else { %><p class="empty-state">Chưa có thông báo.</p><% } %>
+  </div>
+</section></div>
+<%- include('../layouts/footer') %>

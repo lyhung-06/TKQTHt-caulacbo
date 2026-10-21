@@ -1,0 +1,42 @@
+<%- include('../layouts/header') %>
+
+<div class="card" style="margin-bottom: 2rem;">
+  <h1 style="font-size: 1.85rem; margin-bottom: 1rem;">🏛️ Giới thiệu <%= club.name %></h1>
+  <div style="font-size: 1rem; line-height: 1.8; color: var(--secondary); margin-bottom: 1.5rem;">
+    <%= club.description %>
+  </div>
+  <div style="background: #f8fafc; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); font-size: 0.9rem;">
+    <div>📧 <strong>Email liên hệ:</strong> <%= club.contact_email || 'club.ictu@gmail.com' %></div>
+    <div style="margin-top: 0.25rem;">📍 <strong>Trụ sở sinh hoạt:</strong> Tòa nhà C1, Trường Đại học CNTT & TT (ICTU)</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 2rem;">
+  <h2 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Ban Điều hành Câu lạc bộ</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+    <% officers.forEach(o => { %>
+      <div style="border: 1px solid var(--border); padding: 1.25rem; border-radius: var(--radius); background: #fff;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;"><%= o.full_name %></h3>
+        <p style="color: var(--primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;"><%= o.position %></p>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">✉️ <%= o.email %></p>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-size: 1.35rem; margin-bottom: 1.25rem;">Các Ban & Nhóm công tác</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem;">
+    <% teams.forEach(t => { %>
+      <div style="border: 1px solid var(--border); padding: 1.25rem; border-radius: var(--radius); background: #f8fafc;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem;"><%= t.name %></h3>
+        <p style="color: var(--secondary); font-size: 0.85rem; margin-bottom: 0.75rem;"><%= t.description %></p>
+        <div style="font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem;">
+          👤 Trưởng ban: <strong><%= t.leader_name || 'Chưa phân công' %></strong> | Thành viên: <strong><%= t.member_count %></strong>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,16 @@
+<%- include('../layouts/header') %>
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section class="card">
+    <div class="section-heading"><div><p class="section-eyebrow">Theo dõi thay đổi</p><h1>Nhật ký hoạt động</h1></div></div>
+    <form method="GET" action="/admin/audit-logs" class="filter-form">
+      <select class="form-control" name="action"><option value="">Tất cả thao tác</option><% actions.forEach(item => { %><option value="<%= item.action %>" <%= action === item.action ? 'selected' : '' %>><%= item.action %></option><% }) %></select>
+      <input class="form-control" name="actor_id" type="number" min="1" value="<%= actor_id %>" placeholder="ID người thực hiện">
+      <button class="btn btn-primary" type="submit">Lọc</button><a class="btn btn-outline" href="/admin/audit-logs">Xóa lọc</a>
+    </form>
+    <% if (logs.length) { %><div class="table-responsive"><table><thead><tr><th>Thời điểm</th><th>Người thực hiện</th><th>Vai trò</th><th>Thao tác</th><th>Đối tượng</th><th>Chi tiết</th></tr></thead><tbody>
+      <% logs.forEach(log => { %><tr><td><%= new Date(log.created_at).toLocaleString('vi-VN') %></td><td><%= log.actor_name || log.username || 'Hệ thống' %></td><td><%= log.actor_role || '—' %></td><td><%= log.action %></td><td><%= log.entity_type %> #<%= log.entity_id || '—' %></td><td><code><%= typeof log.metadata === 'string' ? log.metadata : JSON.stringify(log.metadata || {}) %></code></td></tr><% }) %>
+    </tbody></table></div><% } else { %><p class="empty-state">Không có hoạt động phù hợp.</p><% } %>
+  </section>
+</div>
+<%- include('../layouts/footer') %>

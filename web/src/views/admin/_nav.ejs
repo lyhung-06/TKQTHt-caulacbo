@@ -1,0 +1,11 @@
+<aside class="sidebar">
+  <div class="sidebar-title">Quản trị hệ thống</div>
+  <ul class="sidebar-menu">
+    <li><a href="/admin/dashboard" class="<%= currentPath === '/admin/dashboard' ? 'active' : '' %>">Tổng quan</a></li>
+    <li><a href="/admin/users" class="<%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Tài khoản &amp; phân quyền</a></li>
+    <li><a href="/admin/teams" class="<%= currentPath.startsWith('/admin/teams') ? 'active' : '' %>">Ban &amp; nhóm</a></li>
+    <li><a href="/admin/finance" class="<%= currentPath.startsWith('/admin/finance') ? 'active' : '' %>">Tài chính</a></li>
+    <li><a href="/admin/audit-logs" class="<%= currentPath.startsWith('/admin/audit-logs') ? 'active' : '' %>">Nhật ký hoạt động</a></li>
+    <li><a href="/officer/events">Quản lý sự kiện</a></li>
+  </ul>
+</aside>

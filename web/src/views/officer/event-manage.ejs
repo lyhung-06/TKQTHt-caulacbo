@@ -1,0 +1,10 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid"><%- include('_nav') %><section class="card">
+  <div class="section-heading"><div><p class="section-eyebrow">Lịch hoạt động</p><h1>Quản lý sự kiện</h1></div><a class="btn btn-primary" href="/officer/events/create">Tạo sự kiện</a></div>
+  <% if (events.length) { %><div class="table-responsive"><table><thead><tr><th>Sự kiện</th><th>Thời gian</th><th>Đăng ký</th><th>Đã tham dự</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
+    <% events.forEach(event => { %><tr><td><strong><%= event.title %></strong><br><small><%= event.location %></small></td><td><%= new Date(event.start_at).toLocaleString('vi-VN') %></td><td><%= event.registered_count %> / <%= event.capacity %></td><td><%= event.attended_count %></td><td><span class="badge badge-<%= event.status %>"><%= event.status %></span></td><td><div class="action-stack"><a class="btn btn-outline btn-sm" href="/officer/events/<%= event.id %>/edit">Sửa</a><a class="btn btn-outline btn-sm" href="/officer/events/<%= event.id %>/attendance">Điểm danh</a></div></td></tr><% }) %>
+  </tbody></table></div><% } else { %><p class="empty-state">Chưa có sự kiện nào.</p><% } %>
+</section></div>
+<%- include('../layouts/footer') %>

@@ -1,0 +1,127 @@
+<%- include('../layouts/header') %>
+
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="dashboard-grid">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Khu vực Thành viên</div>
+    <ul class="sidebar-menu">
+      <li><a href="/member/dashboard" class="active">📊 Tổng quan</a></li>
+      <li><a href="/member/profile">👤 Hồ sơ cá nhân</a></li>
+      <li><a href="/member/events">📅 Sự kiện của tôi</a></li>
+      <li><a href="/member/attendance">✅ Lịch sử điểm danh</a></li>
+      <li><a href="/events">🚀 Khám phá sự kiện</a></li>
+    </ul>
+  </aside>
+
+  <!-- Content -->
+  <div>
+    <!-- Welcome Card -->
+    <div class="card" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.4rem; color: #1e3a8a; margin-bottom: 0.25rem;">
+            Xin chào, <%= currentUser.full_name %>!
+          </h2>
+          <p style="color: #3b82f6; font-size: 0.9rem;">
+            Mã thành viên: <strong><%= membership.member_code || 'Chưa cấp' %></strong> | Vị trí: <strong><%= membership.position || 'Thành viên' %></strong>
+          </p>
+        </div>
+        <span class="badge badge-active" style="font-size: 0.85rem; padding: 0.4rem 0.8rem;">
+          Trạng thái: <%= membership.status === 'active' ? 'Đang hoạt động' : membership.status %>
+        </span>
+      </div>
+    </div>
+
+    <!-- Registered Events -->
+    <div class="card">
+      <div class="card-title">
+        <span>Sự kiện bạn đã đăng ký gần đây</span>
+        <a href="/member/events" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Xem tất cả</a>
+      </div>
+
+      <% if (registeredEvents && registeredEvents.length > 0) { %>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sự kiện</th>
+                <th>Thời gian</th>
+                <th>Địa điểm</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% registeredEvents.forEach(e => { %>
+                <tr>
+                  <td><strong><%= e.title %></strong></td>
+                  <td><%= new Date(e.start_at).toLocaleString('vi-VN') %></td>
+                  <td><%= e.location %></td>
+                  <td>
+                    <span class="badge <%= e.reg_status === 'registered' ? 'badge-published' : 'badge-completed' %>">
+                      <%= e.reg_status === 'registered' ? 'Đã đăng ký' : e.reg_status %>
+                    </span>
+                  </td>
+                  <td>
+                    <a href="/events/<%= e.id %>" class="btn btn-outline btn-sm">Xem chi tiết</a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p style="color: var(--text-muted); padding: 1rem 0;">Bạn chưa đăng ký sự kiện nào.</p>
+        <a href="/events" class="btn btn-primary btn-sm">Xem danh sách sự kiện mở</a>
+      <% } %>
+    </div>
+
+    <!-- Attendance History -->
+    <div class="card">
+      <div class="card-title">
+        <span>Lịch sử điểm danh tham gia</span>
+        <a href="/member/attendance" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Xem tất cả</a>
+      </div>
+
+      <% if (attendanceHistory && attendanceHistory.length > 0) { %>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Sự kiện</th>
+                <th>Thời gian sự kiện</th>
+                <th>Trạng thái điểm danh</th>
+                <th>Người điểm danh</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% attendanceHistory.forEach(a => { %>
+                <tr>
+                  <td><%= a.event_title %></td>
+                  <td><%= new Date(a.start_at).toLocaleString('vi-VN') %></td>
+                  <td>
+                    <span class="badge <%= a.status === 'present' ? 'badge-present' : (a.status === 'late' ? 'badge-late' : 'badge-excused') %>">
+                      <%= a.status === 'present' ? 'Có mặt' : (a.status === 'late' ? 'Đi muộn' : (a.status === 'excused' ? 'Có phép' : 'Vắng')) %>
+                    </span>
+                  </td>
+                  <td><%= a.checker_name || 'Hệ thống' %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p style="color: var(--text-muted);">Chưa có dữ liệu điểm danh.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

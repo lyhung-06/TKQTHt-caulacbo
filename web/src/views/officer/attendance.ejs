@@ -1,0 +1,10 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid"><%- include('_nav') %><section class="card">
+  <div class="section-heading"><div><p class="section-eyebrow">Sự kiện · <%= new Date(event.start_at).toLocaleString('vi-VN') %></p><h1>Điểm danh: <%= event.title %></h1></div><a class="btn btn-outline" href="/officer/events">Quay lại sự kiện</a></div>
+  <% if (registrations.length) { %><div class="table-responsive"><table><thead><tr><th>Thành viên</th><th>Mã thành viên</th><th>Đăng ký</th><th>Điểm danh</th><th>Ghi chú</th><th></th></tr></thead><tbody>
+    <% registrations.forEach(reg => { const formId = 'attendance-' + reg.user_id; %><tr><td><strong><%= reg.full_name %></strong><br><small><%= reg.email %> · <%= reg.phone || '' %></small></td><td><%= reg.member_code || '—' %></td><td><%= new Date(reg.registered_at).toLocaleString('vi-VN') %></td><td><form id="<%= formId %>" method="POST" action="/officer/events/<%= event.id %>/attendance" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="user_id" value="<%= reg.user_id %>"><select class="form-control" name="status" aria-label="Trạng thái điểm danh"><% for (const value of ['present','late','absent','excused']) { const labels={present:'Có mặt',late:'Đi muộn',absent:'Vắng',excused:'Có phép'}; %><option value="<%= value %>" <%= (reg.att_status || 'present') === value ? 'selected' : '' %>><%= labels[value] %></option><% } %></select></form></td><td><input class="form-control" form="<%= formId %>" name="note" value="<%= reg.att_note || '' %>" placeholder="Ghi chú"></td><td><button class="btn btn-primary btn-sm" type="submit" form="<%= formId %>">Lưu</button></td></tr><% }) %>
+  </tbody></table></div><% } else { %><p class="empty-state">Chưa có thành viên đăng ký sự kiện này.</p><% } %>
+</section></div>
+<%- include('../layouts/footer') %>
