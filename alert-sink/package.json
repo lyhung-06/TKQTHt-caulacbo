@@ -1,0 +1,10 @@
+{
+  "name": "club-alert-sink",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Internal webhook receiver for club security alerts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
