@@ -37,6 +37,41 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+body.login-page-body {
+  background-color: #173b73;
+  background-image:
+    linear-gradient(115deg, rgb(10 34 75 / 0.68), rgb(18 63 120 / 0.34)),
+    url("/public/images/login-campus.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+body.login-page-body .navbar {
+  background: rgb(255 255 255 / 0.94);
+}
+
+body.login-page-body .main-content {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: clamp(28px, 6vh, 64px) 18px;
+}
+
+.login-page {
+  width: min(440px, 100%);
+  margin: 0 auto;
+}
+
+.login-card {
+  padding: 2.25rem 2rem;
+  border: 1px solid rgb(255 255 255 / 0.65);
+  background: rgb(255 255 255 / 0.97);
+  box-shadow: 0 24px 70px rgb(8 24 52 / 0.28);
+  backdrop-filter: blur(12px);
+}
+
 button,
 input,
 select,
@@ -753,6 +788,7 @@ footer {
   .nav-auth { margin-left: auto; gap: 6px; }
   .nav-auth .btn { min-height: 34px; padding: 6px 9px; font-size: 0.76rem; }
   .main-content { padding: 22px 16px 38px; }
+  body.login-page-body .main-content { padding: 32px 16px; }
   .home-page { padding-top: 18px; }
   .hero { min-height: 0; padding: 37px 26px; border-radius: 21px; }
   .hero h1 { font-size: clamp(2rem, 9vw, 2.8rem); }

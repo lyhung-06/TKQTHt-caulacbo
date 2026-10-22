@@ -39,3 +39,4 @@ web/public/uploads/*
 Thumbs.db
 .vscode/
 .idea/
+docs/*.docx
