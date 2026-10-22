@@ -1,0 +1,63 @@
+<%- include('../layouts/header') %>
+
+<div class="dashboard-grid">
+  <aside class="sidebar">
+    <div class="sidebar-title">Khu vực Thành viên</div>
+    <ul class="sidebar-menu">
+      <li><a href="/member/dashboard">📊 Tổng quan</a></li>
+      <li><a href="/member/profile">👤 Hồ sơ cá nhân</a></li>
+      <li><a href="/member/events">📅 Sự kiện của tôi</a></li>
+      <li><a href="/member/attendance" class="active">✅ Lịch sử điểm danh</a></li>
+    </ul>
+  </aside>
+
+  <div>
+    <div class="card">
+      <div class="card-title">
+        <h2>✅ Lịch sử Điểm danh tham gia hoạt động</h2>
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Ghi nhận sự tham gia của bạn tại các buổi sinh hoạt, seminar và workshop của CLB.
+      </p>
+
+      <% if (records && records.length > 0) { %>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sự kiện</th>
+                <th>Địa điểm</th>
+                <th>Thời gian diễn ra</th>
+                <th>Trạng thái điểm danh</th>
+                <th>Thời điểm điểm danh</th>
+                <th>Người ghi nhận</th>
+                <th>Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% records.forEach(r => { %>
+                <tr>
+                  <td><strong><%= r.event_title %></strong></td>
+                  <td><%= r.location %></td>
+                  <td><%= new Date(r.start_at).toLocaleString('vi-VN') %></td>
+                  <td>
+                    <span class="badge <%= r.status === 'present' ? 'badge-present' : (r.status === 'late' ? 'badge-late' : (r.status === 'excused' ? 'badge-excused' : 'badge-absent')) %>">
+                      <%= r.status === 'present' ? 'Có mặt' : (r.status === 'late' ? 'Đi muộn' : (r.status === 'excused' ? 'Có phép' : 'Vắng mặt')) %>
+                    </span>
+                  </td>
+                  <td><%= new Date(r.checked_at).toLocaleString('vi-VN') %></td>
+                  <td><%= r.checked_by_name || 'Hệ thống' %></td>
+                  <td><%= r.note || '—' %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p style="color: var(--text-muted); padding: 1.5rem 0; text-align: center;">Chưa có bản ghi điểm danh nào.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

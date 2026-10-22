@@ -1,0 +1,19 @@
+apiVersion: 1
+
+policies:
+  - orgId: 1
+    receiver: club-alert-sink
+    group_by:
+      - alertname
+    group_wait: 0s
+    group_interval: 1m
+    repeat_interval: 1h
+    routes:
+      - receiver: club-alert-sink
+        object_matchers:
+          - ["severity", "=", "critical"]
+        group_by:
+          - alertname
+        group_wait: 0s
+        group_interval: 1m
+        repeat_interval: 1h

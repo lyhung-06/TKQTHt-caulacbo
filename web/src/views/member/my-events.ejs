@@ -1,0 +1,79 @@
+<%- include('../layouts/header') %>
+
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="dashboard-grid">
+  <aside class="sidebar">
+    <div class="sidebar-title">Khu vực Thành viên</div>
+    <ul class="sidebar-menu">
+      <li><a href="/member/dashboard">📊 Tổng quan</a></li>
+      <li><a href="/member/profile">👤 Hồ sơ cá nhân</a></li>
+      <li><a href="/member/events" class="active">📅 Sự kiện của tôi</a></li>
+      <li><a href="/member/attendance">✅ Lịch sử điểm danh</a></li>
+    </ul>
+  </aside>
+
+  <div>
+    <div class="card">
+      <div class="card-title">
+        <h2>📅 Danh sách Sự kiện bạn đã đăng ký</h2>
+        <a href="/events" class="btn btn-primary btn-sm">+ Khám phá thêm sự kiện</a>
+      </div>
+
+      <% if (events && events.length > 0) { %>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sự kiện</th>
+                <th>Thời gian bắt đầu</th>
+                <th>Địa điểm</th>
+                <th>Ngày đăng ký</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% events.forEach(e => { %>
+                <tr>
+                  <td>
+                    <strong><a href="/events/<%= e.id %>" style="color: var(--primary); text-decoration: none;"><%= e.title %></a></strong>
+                  </td>
+                  <td><%= new Date(e.start_at).toLocaleString('vi-VN') %></td>
+                  <td><%= e.location %></td>
+                  <td><%= new Date(e.registered_at).toLocaleDateString('vi-VN') %></td>
+                  <td>
+                    <span class="badge <%= e.reg_status === 'registered' ? 'badge-published' : (e.reg_status === 'attended' ? 'badge-active' : 'badge-cancelled') %>">
+                      <%= e.reg_status === 'registered' ? 'Đã đăng ký' : (e.reg_status === 'attended' ? 'Đã tham gia' : (e.reg_status === 'cancelled' ? 'Đã hủy' : e.reg_status)) %>
+                    </span>
+                  </td>
+                  <td>
+                    <% if (e.reg_status === 'registered' && new Date() < new Date(e.start_at)) { %>
+                      <form action="/member/events/<%= e.id %>/cancel" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đăng ký tham gia sự kiện này?');" style="display:inline;">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-outline btn-sm" style="color: var(--danger); border-color: #fca5a5;">Hủy đăng ký</button>
+                      </form>
+                    <% } else { %>
+                      <a href="/events/<%= e.id %>" class="btn btn-outline btn-sm">Xem chi tiết</a>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p style="color: var(--text-muted); padding: 1.5rem 0; text-align: center;">
+          Bạn chưa có đăng ký sự kiện nào.
+        </p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

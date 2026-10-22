@@ -1,0 +1,58 @@
+<%- include('../layouts/header') %>
+
+<div style="max-width: 480px; margin: 2rem auto;">
+  <div class="card" style="padding: 2.25rem 2rem;">
+    <h2 style="text-align: center; margin-bottom: 0.5rem;">Đăng ký Thành viên</h2>
+    <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+      Tham gia Câu lạc bộ Tin học & Kỹ thuật Phần mềm (ICTU)
+    </p>
+
+    <% if (error) { %>
+      <div class="alert alert-error" style="font-size: 0.85rem;"><%= error %></div>
+    <% } %>
+
+    <form action="/auth/register" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-group">
+        <label class="form-label">Tên đăng nhập (Username) *:</label>
+        <input type="text" name="username" class="form-control" placeholder="Chỉ gồm chữ cái, số (vd: hungly23)" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Địa chỉ Email *:</label>
+        <input type="email" name="email" class="form-control" placeholder="email@domain.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Họ và tên *:</label>
+        <input type="text" name="full_name" class="form-control" placeholder="Ví dụ: Lý Văn Hưng" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Số điện thoại liên hệ:</label>
+        <input type="tel" name="phone" class="form-control" placeholder="Ví dụ: 0987654321">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Mật khẩu *:</label>
+        <input type="password" name="password" class="form-control" placeholder="Tối thiểu 6 ký tự" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Xác nhận mật khẩu *:</label>
+        <input type="password" name="confirm_password" class="form-control" placeholder="Nhập lại mật khẩu" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.65rem;">
+        Hoàn tất Đăng ký
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-muted);">
+      Đã có tài khoản? <a href="/auth/login" style="color: var(--primary); text-decoration: none; font-weight: 600;">Đăng nhập</a>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

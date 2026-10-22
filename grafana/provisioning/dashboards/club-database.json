@@ -1,0 +1,48 @@
+{
+  "annotations": { "list": [] },
+  "editable": false,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [{ "expr": "mysql_global_status_threads_connected", "legendFormat": "Connected threads", "refId": "A" }],
+      "title": "MySQL connected threads",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "targets": [{ "expr": "rate(mysql_global_status_queries[5m])", "legendFormat": "Queries/s", "refId": "A" }],
+      "title": "MySQL query rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "targets": [{ "expr": "mysql_global_status_innodb_buffer_pool_bytes_data", "legendFormat": "InnoDB data bytes", "refId": "A" }],
+      "title": "InnoDB buffer pool data",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "targets": [{ "expr": "mysql_global_variables_innodb_buffer_pool_size", "legendFormat": "InnoDB buffer pool size", "refId": "A" }],
+      "title": "InnoDB buffer pool size",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["club", "database", "mysql"],
+  "time": { "from": "now-1h", "to": "now" },
+  "title": "Club - Database",
+  "uid": "club-database",
+  "version": 2
+}

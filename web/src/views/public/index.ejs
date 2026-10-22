@@ -1,0 +1,103 @@
+<%- include('../layouts/header') %>
+
+<div class="home-page">
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-eyebrow">Câu lạc bộ học thuật &amp; dự án</span>
+      <h1><%= club.name || 'Câu lạc bộ Tin học & Kỹ thuật Phần mềm' %></h1>
+      <p><%= club.description || 'Môi trường rèn luyện kỹ năng thực tế, phát triển dự án công nghệ thông tin, lập trình Full-stack, DevOps và tự động hóa hệ thống dành cho sinh viên ICTU.' %></p>
+      <div class="hero-actions">
+        <a href="/events" class="btn btn-primary">Khám phá sự kiện <span aria-hidden="true">→</span></a>
+        <% if (!currentUser) { %>
+          <a href="/auth/register" class="btn btn-outline">Trở thành thành viên</a>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <div class="home-layout">
+    <div class="home-primary">
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-eyebrow">Cùng học, cùng làm</p>
+            <h2>Hoạt động &amp; sự kiện nổi bật</h2>
+          </div>
+          <a href="/events" class="section-link">Tất cả sự kiện <span aria-hidden="true">→</span></a>
+        </div>
+
+        <% if (upcomingEvents && upcomingEvents.length > 0) { %>
+          <div class="event-list">
+            <% upcomingEvents.forEach(e => { %>
+              <article class="event-item">
+                <div class="event-topline">
+                  <h3><a href="/events/<%= e.id %>"><%= e.title %></a></h3>
+                  <span class="badge badge-published">Đang mở đăng ký</span>
+                </div>
+                <div class="event-meta">
+                  <span><span aria-hidden="true">📍</span> <%= e.location %></span>
+                  <span><span aria-hidden="true">🗓</span> <%= new Date(e.start_at).toLocaleString('vi-VN') %></span>
+                </div>
+                <div class="event-footer">
+                  <span>Đã đăng ký: <strong><%= e.registered_count %> / <%= e.capacity %></strong></span>
+                  <a href="/events/<%= e.id %>" class="btn btn-outline btn-sm">Xem chi tiết <span aria-hidden="true">→</span></a>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="empty-state">Hiện chưa có sự kiện mở đăng ký mới.</p>
+        <% } %>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-eyebrow">Cộng đồng ICTU</p>
+            <h2>Ban chuyên môn &amp; nhóm công tác</h2>
+          </div>
+        </div>
+        <% if (teams && teams.length > 0) { %>
+          <div class="team-grid">
+            <% teams.forEach(t => { %>
+              <article class="team-item">
+                <h3><%= t.name %></h3>
+                <p><%= t.description %></p>
+              </article>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="empty-state">Thông tin các nhóm sẽ được cập nhật sớm.</p>
+        <% } %>
+      </section>
+    </div>
+
+    <aside class="home-sidebar">
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <p class="section-eyebrow">Cập nhật mới nhất</p>
+            <h2>Thông báo</h2>
+          </div>
+          <a href="/announcements" class="section-link">Xem tất cả <span aria-hidden="true">→</span></a>
+        </div>
+
+        <% if (announcements && announcements.length > 0) { %>
+          <div class="announcement-list">
+            <% announcements.forEach(a => { %>
+              <article class="announcement-item">
+                <h3><%= a.title %></h3>
+                <p><%= a.content.length > 110 ? a.content.substring(0, 110) + '…' : a.content %></p>
+                <small><%= new Date(a.published_at).toLocaleDateString('vi-VN') %> · <%= a.author_name %></small>
+              </article>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="empty-state">Chưa có thông báo mới.</p>
+        <% } %>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

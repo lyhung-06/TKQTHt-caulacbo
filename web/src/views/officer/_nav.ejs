@@ -1,0 +1,12 @@
+<aside class="sidebar">
+  <div class="sidebar-title">Khu vực điều hành</div>
+  <ul class="sidebar-menu">
+    <li><a href="/officer/dashboard" class="<%= currentPath === '/officer/dashboard' ? 'active' : '' %>">Tổng quan</a></li>
+    <li><a href="/officer/events" class="<%= currentPath.startsWith('/officer/events') ? 'active' : '' %>">Sự kiện &amp; điểm danh</a></li>
+    <li><a href="/officer/members" class="<%= currentPath.startsWith('/officer/members') ? 'active' : '' %>">Thành viên</a></li>
+    <li><a href="/officer/announcements" class="<%= currentPath.startsWith('/officer/announcements') ? 'active' : '' %>">Thông báo</a></li>
+    <% if (currentUser && currentUser.role === 'admin') { %>
+      <li><a href="/admin/dashboard">Khu vực quản trị</a></li>
+    <% } %>
+  </ul>
+</aside>

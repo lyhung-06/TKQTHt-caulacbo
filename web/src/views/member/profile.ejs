@@ -1,0 +1,65 @@
+<%- include('../layouts/header') %>
+
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="dashboard-grid">
+  <aside class="sidebar">
+    <div class="sidebar-title">Khu vực Thành viên</div>
+    <ul class="sidebar-menu">
+      <li><a href="/member/dashboard">📊 Tổng quan</a></li>
+      <li><a href="/member/profile" class="active">👤 Hồ sơ cá nhân</a></li>
+      <li><a href="/member/events">📅 Sự kiện của tôi</a></li>
+      <li><a href="/member/attendance">✅ Lịch sử điểm danh</a></li>
+    </ul>
+  </aside>
+
+  <div>
+    <div class="card">
+      <div class="card-title">👤 Thông tin Hồ sơ cá nhân</div>
+      
+      <div style="background: #f8fafc; border: 1px solid var(--border); padding: 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
+        <div>🆔 <strong>Mã thành viên:</strong> <%= user.member_code || 'Chưa cấp' %></div>
+        <div>🏛️ <strong>Câu lạc bộ:</strong> <%= user.club_name || 'ICTU Club' %></div>
+        <div>⭐ <strong>Chức vụ:</strong> <%= user.position || 'Thành viên' %></div>
+        <div>🛡️ <strong>Vai trò hệ thống:</strong> <span class="badge badge-published"><%= user.role %></span></div>
+        <div>📅 <strong>Ngày tham gia:</strong> <%= user.joined_at ? new Date(user.joined_at).toLocaleDateString('vi-VN') : 'Mới tạo' %></div>
+        <div>📊 <strong>Trạng thái:</strong> <span class="badge badge-active"><%= user.member_status || 'active' %></span></div>
+      </div>
+
+      <form action="/member/profile" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="form-group">
+          <label class="form-label">Tên đăng nhập (Username):</label>
+          <input type="text" class="form-control" value="<%= user.username %>" disabled style="background-color: #f1f5f9;">
+          <small style="color: var(--text-muted);">Tên đăng nhập không thể thay đổi.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Địa chỉ Email:</label>
+          <input type="email" class="form-control" value="<%= user.email %>" disabled style="background-color: #f1f5f9;">
+          <small style="color: var(--text-muted);">Email dùng để định danh tài khoản.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Họ và tên *:</label>
+          <input type="text" name="full_name" class="form-control" value="<%= user.full_name %>" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Số điện thoại liên hệ:</label>
+          <input type="tel" name="phone" class="form-control" value="<%= user.phone || '' %>" placeholder="09xxxxxxxx">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Lưu thay đổi hồ sơ</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,28 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section class="card">
+    <div class="section-heading"><div><p class="section-eyebrow">Danh tính &amp; quyền truy cập</p><h1>Tài khoản và thành viên</h1></div></div>
+    <form method="GET" action="/admin/users" class="filter-form">
+      <input class="form-control" type="search" name="search" value="<%= search %>" placeholder="Tìm tên, email, username hoặc mã thành viên">
+      <select class="form-control" name="role"><option value="">Tất cả vai trò</option><% for (const value of ['member','officer','admin']) { %><option value="<%= value %>" <%= role === value ? 'selected' : '' %>><%= value %></option><% } %></select>
+      <select class="form-control" name="is_active"><option value="">Mọi trạng thái</option><option value="1" <%= is_active === '1' ? 'selected' : '' %>>Đang hoạt động</option><option value="0" <%= is_active === '0' ? 'selected' : '' %>>Đã khóa</option></select>
+      <button class="btn btn-primary" type="submit">Lọc</button><a class="btn btn-outline" href="/admin/users">Xóa lọc</a>
+    </form>
+    <% if (users.length) { %>
+      <div class="table-responsive"><table><thead><tr><th>Thành viên</th><th>Mã CLB</th><th>Trạng thái</th><th>Vai trò</th><th>Cập nhật quyền</th><th>Tài khoản</th></tr></thead><tbody>
+        <% users.forEach(user => { %><tr>
+          <td><strong><%= user.full_name %></strong><br><small><%= user.username %> · <%= user.email %></small></td>
+          <td><%= user.member_code || '—' %></td>
+          <td><span class="badge <%= user.is_active ? 'badge-active' : 'badge-suspended' %>"><%= user.is_active ? 'Đang hoạt động' : 'Đã khóa' %></span></td>
+          <td><%= user.role %></td>
+          <td><form method="POST" action="/admin/users/<%= user.id %>/role" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><select class="form-control" name="role" aria-label="Vai trò"><% for (const value of ['member','officer','admin']) { %><option value="<%= value %>" <%= user.role === value ? 'selected' : '' %>><%= value %></option><% } %></select><button class="btn btn-outline btn-sm" type="submit">Lưu</button></form></td>
+          <td><form method="POST" action="/admin/users/<%= user.id %>/status"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn <%= user.is_active ? 'btn-danger' : 'btn-success' %> btn-sm" type="submit"><%= user.is_active ? 'Khóa' : 'Mở khóa' %></button></form></td>
+        </tr><% }) %>
+      </tbody></table></div>
+    <% } else { %><p class="empty-state">Không tìm thấy tài khoản phù hợp.</p><% } %>
+  </section>
+</div>
+<%- include('../layouts/footer') %>

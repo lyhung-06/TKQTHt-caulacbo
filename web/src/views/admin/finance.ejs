@@ -1,0 +1,30 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section>
+    <div class="section-heading"><div><p class="section-eyebrow">Minh bạch ngân sách</p><h1>Thu và chi câu lạc bộ</h1></div></div>
+    <div class="stats-grid"><article class="stat-card"><span class="stat-label">Tổng thu</span><strong class="stat-value"><%= totalIncome.toLocaleString('vi-VN') %> ₫</strong></article><article class="stat-card"><span class="stat-label">Tổng chi</span><strong class="stat-value"><%= totalExpense.toLocaleString('vi-VN') %> ₫</strong></article><article class="stat-card"><span class="stat-label">Số dư</span><strong class="stat-value"><%= balance.toLocaleString('vi-VN') %> ₫</strong></article></div>
+    <div class="card">
+      <div class="card-title">Ghi nhận giao dịch</div>
+      <form method="POST" action="/admin/finance" class="form-grid">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group"><label class="form-label" for="finance-type">Loại giao dịch</label><select class="form-control" id="finance-type" name="type" required><option value="income">Thu</option><option value="expense">Chi</option></select></div>
+        <div class="form-group"><label class="form-label" for="finance-category">Danh mục</label><input class="form-control" id="finance-category" name="category" list="finance-categories" required maxlength="100"><datalist id="finance-categories"><% categories.forEach(item => { %><option value="<%= item.category %>"><% }) %></datalist></div>
+        <div class="form-group"><label class="form-label" for="finance-amount">Số tiền (VND)</label><input class="form-control" id="finance-amount" type="number" name="amount" min="1" step="1" required></div>
+        <div class="form-group"><label class="form-label" for="finance-date">Ngày giao dịch</label><input class="form-control" id="finance-date" type="date" name="transaction_date" required></div>
+        <div class="form-group form-span"><label class="form-label" for="finance-description">Nội dung</label><textarea class="form-control" id="finance-description" name="description" rows="2"></textarea></div>
+        <div><button class="btn btn-primary" type="submit">Lưu giao dịch</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-title">Lịch sử giao dịch</div>
+      <form method="GET" action="/admin/finance" class="filter-form"><select class="form-control" name="type"><option value="">Thu và chi</option><option value="income" <%= type === 'income' ? 'selected' : '' %>>Thu</option><option value="expense" <%= type === 'expense' ? 'selected' : '' %>>Chi</option></select><select class="form-control" name="category"><option value="">Mọi danh mục</option><% categories.forEach(item => { %><option value="<%= item.category %>" <%= category === item.category ? 'selected' : '' %>><%= item.category %></option><% }) %></select><button class="btn btn-outline" type="submit">Lọc</button><a class="btn btn-outline" href="/admin/finance">Xóa lọc</a></form>
+      <% if (transactions.length) { %><div class="table-responsive"><table><thead><tr><th>Ngày</th><th>Loại</th><th>Danh mục</th><th>Nội dung</th><th>Người ghi nhận</th><th>Số tiền</th></tr></thead><tbody>
+        <% transactions.forEach(item => { %><tr><td><%= new Date(item.transaction_date).toLocaleDateString('vi-VN') %></td><td><span class="badge <%= item.type === 'income' ? 'badge-active' : 'badge-cancelled' %>"><%= item.type === 'income' ? 'Thu' : 'Chi' %></span></td><td><%= item.category %></td><td><%= item.description || '—' %></td><td><%= item.creator_name || '—' %></td><td><strong><%= Number(item.amount).toLocaleString('vi-VN') %> ₫</strong></td></tr><% }) %>
+      </tbody></table></div><% } else { %><p class="empty-state">Chưa có giao dịch phù hợp.</p><% } %>
+    </div>
+  </section>
+</div>
+<%- include('../layouts/footer') %>

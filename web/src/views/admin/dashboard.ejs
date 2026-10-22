@@ -1,0 +1,53 @@
+<%- include('../layouts/header') %>
+
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section>
+    <div class="card">
+      <p class="section-eyebrow">Trung tâm điều hành</p>
+      <h1>Xin chào, <%= currentUser.full_name %></h1>
+      <p style="color:var(--text-muted)">Theo dõi hoạt động, thành viên và tình hình tài chính của câu lạc bộ.</p>
+    </div>
+
+    <div class="stats-grid">
+      <article class="stat-card"><span class="stat-label">Thành viên hoạt động</span><strong class="stat-value"><%= stats.activeMembers %></strong><span class="stat-desc"><%= stats.newMembers %> thành viên mới trong 30 ngày</span></article>
+      <article class="stat-card"><span class="stat-label">Tổng sự kiện</span><strong class="stat-value"><%= stats.totalEvents %></strong><span class="stat-desc"><%= stats.totalRegistrations %> lượt đăng ký</span></article>
+      <article class="stat-card"><span class="stat-label">Tỷ lệ tham dự</span><strong class="stat-value"><%= stats.attendanceRate %>%</strong><span class="stat-desc"><%= stats.attended %> / <%= stats.totalAtt %> lượt điểm danh</span></article>
+      <article class="stat-card"><span class="stat-label">Số dư quỹ</span><strong class="stat-value"><%= Number(stats.balance).toLocaleString('vi-VN') %> ₫</strong><span class="stat-desc">Thu <%= Number(stats.totalIncome).toLocaleString('vi-VN') %> ₫ · Chi <%= Number(stats.totalExpense).toLocaleString('vi-VN') %> ₫</span></article>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Sự kiện gần đây</span><a class="section-link" href="/officer/events">Đi tới quản lý sự kiện →</a></div>
+      <% if (recentEvents.length) { %>
+        <div class="table-responsive"><table><thead><tr><th>Sự kiện</th><th>Thời gian</th><th>Trạng thái</th><th>Đăng ký</th><th>Đã tham dự</th></tr></thead><tbody>
+          <% recentEvents.forEach(event => { %><tr><td><strong><%= event.title %></strong></td><td><%= new Date(event.start_at).toLocaleString('vi-VN') %></td><td><span class="badge badge-<%= event.status %>"><%= event.status %></span></td><td><%= event.registered_count %> / <%= event.capacity %></td><td><%= event.attended_count %></td></tr><% }) %>
+        </tbody></table></div>
+      <% } else { %><p class="empty-state">Chưa có sự kiện.</p><% } %>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Thao tác quản trị</span></div>
+      <div class="admin-shortcuts">
+        <a class="btn btn-outline" href="/admin/users">Quản lý tài khoản</a>
+        <a class="btn btn-outline" href="/admin/teams">Quản lý ban &amp; nhóm</a>
+        <a class="btn btn-outline" href="/admin/finance">Thu &amp; chi</a>
+        <a class="btn btn-outline" href="/admin/audit-logs">Xem nhật ký</a>
+        <a class="btn btn-primary" href="/officer/events/create">Tạo sự kiện</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>Hoạt động quản trị gần đây</span><a class="section-link" href="/admin/audit-logs">Xem nhật ký →</a></div>
+      <% if (recentAuditLogs.length) { %>
+        <div class="table-responsive"><table><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Thao tác</th><th>Đối tượng</th></tr></thead><tbody>
+          <% recentAuditLogs.forEach(log => { %><tr><td><%= new Date(log.created_at).toLocaleString('vi-VN') %></td><td><%= log.actor_name || log.username || 'Hệ thống' %></td><td><%= log.action %></td><td><%= log.entity_type %> #<%= log.entity_id || '—' %></td></tr><% }) %>
+        </tbody></table></div>
+      <% } else { %><p class="empty-state">Chưa có hoạt động được ghi nhận.</p><% } %>
+    </div>
+  </section>
+</div>
+
+<%- include('../layouts/footer') %>
