@@ -1,0 +1,18 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section>
+    <div class="card"><p class="section-eyebrow">Điều hành câu lạc bộ</p><h1>Xin chào, <%= currentUser.full_name %></h1><p style="color:var(--text-muted)">Theo dõi thành viên, sự kiện và các thông báo mới nhất.</p></div>
+    <div class="stats-grid"><article class="stat-card"><span class="stat-label">Thành viên hoạt động</span><strong class="stat-value"><%= memberCount %></strong></article><article class="stat-card"><span class="stat-label">Sự kiện sắp diễn ra</span><strong class="stat-value"><%= upcomingEventsCount %></strong></article></div>
+    <div class="admin-shortcuts card"><a class="btn btn-primary" href="/officer/events/create">Tạo sự kiện</a><a class="btn btn-outline" href="/officer/events">Quản lý sự kiện</a><a class="btn btn-outline" href="/officer/members">Danh sách thành viên</a><a class="btn btn-outline" href="/officer/announcements">Soạn thông báo</a></div>
+    <div class="card"><div class="card-title"><span>Sự kiện cần theo dõi</span><a class="section-link" href="/officer/events">Tất cả →</a></div>
+      <% if (eventsToManage.length) { %><div class="table-responsive"><table><thead><tr><th>Sự kiện</th><th>Thời gian</th><th>Địa điểm</th><th>Trạng thái</th><th></th></tr></thead><tbody><% eventsToManage.forEach(event => { %><tr><td><strong><%= event.title %></strong></td><td><%= new Date(event.start_at).toLocaleString('vi-VN') %></td><td><%= event.location %></td><td><span class="badge badge-<%= event.status %>"><%= event.status %></span></td><td><a class="btn btn-outline btn-sm" href="/officer/events/<%= event.id %>/edit">Chỉnh sửa</a></td></tr><% }) %></tbody></table></div><% } else { %><p class="empty-state">Chưa có sự kiện. Hãy tạo hoạt động đầu tiên cho câu lạc bộ.</p><% } %>
+    </div>
+    <div class="card"><div class="card-title"><span>Thông báo gần đây</span><a class="section-link" href="/officer/announcements">Quản lý →</a></div>
+      <% if (recentAnnouncements.length) { %><div class="announcement-list"><% recentAnnouncements.forEach(item => { %><article class="announcement-item"><h3><%= item.title %></h3><p><%= item.content.length > 140 ? item.content.substring(0, 140) + '…' : item.content %></p><small><%= new Date(item.published_at).toLocaleString('vi-VN') %></small></article><% }) %></div><% } else { %><p class="empty-state">Chưa có thông báo.</p><% } %>
+    </div>
+  </section>
+</div>
+<%- include('../layouts/footer') %>

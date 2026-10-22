@@ -1,0 +1,88 @@
+<%- include('../layouts/header') %>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+      <span class="badge <%= event.status === 'published' ? 'badge-published' : 'badge-completed' %>">
+        <%= event.status === 'published' ? 'Đang mở đăng ký' : 'Đã hoàn thành' %>
+      </span>
+      <a href="/events" class="btn btn-outline btn-sm">&larr; Quay lại danh sách</a>
+    </div>
+
+    <h1 style="font-size: 1.75rem; margin-bottom: 1rem;"><%= event.title %></h1>
+
+    <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
+      <div>📍 <strong>Địa điểm:</strong> <%= event.location %></div>
+      <div>👥 <strong>Sức chứa:</strong> <%= event.capacity %> người</div>
+      <div>🕒 <strong>Bắt đầu:</strong> <%= new Date(event.start_at).toLocaleString('vi-VN') %></div>
+      <div>🏁 <strong>Kết thúc:</strong> <%= new Date(event.end_at).toLocaleString('vi-VN') %></div>
+      <div>⏳ <strong>Hạn chót đăng ký:</strong> <%= new Date(event.registration_deadline).toLocaleString('vi-VN') %></div>
+      <div>📊 <strong>Đã đăng ký:</strong> <%= event.registered_count %> người</div>
+    </div>
+
+    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Mô tả hoạt động</h3>
+    <div style="font-size: 0.95rem; line-height: 1.7; color: var(--secondary); white-space: pre-line; margin-bottom: 1.5rem;">
+      <%= event.description || 'Chưa có thông tin mô tả chi tiết cho sự kiện này.' %>
+    </div>
+  </div>
+
+  <div>
+    <div class="card">
+      <h3 style="font-size: 1.1rem; margin-bottom: 1rem;">Đăng ký tham gia</h3>
+
+      <% const isPastDeadline = new Date() > new Date(event.registration_deadline); %>
+      <% const isFull = event.registered_count >= event.capacity; %>
+
+      <% if (currentUser) { %>
+        <% if (isRegistered) { %>
+          <div style="background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem; text-align: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">✅</div>
+            <strong>Bạn đã đăng ký sự kiện này!</strong>
+            <p style="font-size: 0.85rem; margin-top: 0.3rem;">Trạng thái: <strong><%= registrationStatus %></strong></p>
+          </div>
+          <form action="/member/events/<%= event.id %>/cancel" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-outline" style="width: 100%; color: var(--danger); border-color: #fca5a5;">
+              Hủy đăng ký
+            </button>
+          </form>
+        <% } else if (event.status !== 'published') { %>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Sự kiện này hiện không nhận đăng ký.</p>
+        <% } else if (isPastDeadline) { %>
+          <div class="alert alert-error" style="font-size: 0.85rem;">
+            Đã hết hạn đăng ký tham gia (Hạn chót: <%= new Date(event.registration_deadline).toLocaleString('vi-VN') %>).
+          </div>
+        <% } else if (isFull) { %>
+          <div class="alert alert-error" style="font-size: 0.85rem;">
+            Sự kiện đã đủ số lượng người đăng ký (<%= event.capacity %>/<%= event.capacity %>).
+          </div>
+        <% } else { %>
+          <form action="/member/events/<%= event.id %>/register" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="form-group">
+              <label class="form-label">Ghi chú kèm theo (tùy chọn):</label>
+              <textarea name="note" class="form-control" rows="3" placeholder="Ví dụ: Đăng ký nhóm, câu hỏi cho diễn giả..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Xác nhận Đăng ký</button>
+          </form>
+        <% } %>
+      <% } else { %>
+        <div style="text-align: center; padding: 1rem 0;">
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+            Vui lòng đăng nhập với tư cách thành viên để đăng ký tham gia sự kiện.
+          </p>
+          <a href="/auth/login" class="btn btn-primary" style="width: 100%;">Đăng nhập ngay</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

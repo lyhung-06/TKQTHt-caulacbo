@@ -1,0 +1,19 @@
+<%- include('../layouts/header') %>
+<div class="dashboard-grid"><%- include('_nav') %><section class="card">
+  <div class="section-heading"><div><p class="section-eyebrow">Lịch hoạt động</p><h1><%= title %></h1></div><a class="btn btn-outline" href="/officer/events">Quay lại danh sách</a></div>
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% const formEvent = event || {}; const dateValue = value => value ? new Date(value).toISOString().slice(0,16) : ''; %>
+  <form method="POST" action="<%= formEvent.id ? '/officer/events/' + formEvent.id + '/edit' : '/officer/events/create' %>" class="form-grid">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="form-group form-span"><label class="form-label" for="event-title">Tên sự kiện</label><input class="form-control" id="event-title" name="title" maxlength="200" value="<%= formEvent.title || '' %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-location">Địa điểm</label><input class="form-control" id="event-location" name="location" maxlength="200" value="<%= formEvent.location || '' %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-capacity">Sức chứa</label><input class="form-control" id="event-capacity" type="number" name="capacity" min="1" value="<%= formEvent.capacity || 30 %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-start">Bắt đầu</label><input class="form-control" id="event-start" type="datetime-local" name="start_at" value="<%= dateValue(formEvent.start_at) %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-end">Kết thúc</label><input class="form-control" id="event-end" type="datetime-local" name="end_at" value="<%= dateValue(formEvent.end_at) %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-deadline">Hạn đăng ký</label><input class="form-control" id="event-deadline" type="datetime-local" name="registration_deadline" value="<%= dateValue(formEvent.registration_deadline) %>" required></div>
+    <div class="form-group"><label class="form-label" for="event-status">Trạng thái</label><select class="form-control" id="event-status" name="status"><% for (const value of ['draft','published','cancelled','completed']) { %><option value="<%= value %>" <%= (formEvent.status || 'draft') === value ? 'selected' : '' %>><%= value === 'draft' ? 'Bản nháp' : value === 'published' ? 'Đang mở' : value === 'cancelled' ? 'Đã hủy' : 'Hoàn thành' %></option><% } %></select></div>
+    <div class="form-group form-span"><label class="form-label" for="event-description">Mô tả</label><textarea class="form-control" id="event-description" name="description" rows="6"><%= formEvent.description || '' %></textarea></div>
+    <div class="form-span"><button class="btn btn-primary" type="submit"><%= formEvent.id ? 'Lưu thay đổi' : 'Tạo sự kiện' %></button></div>
+  </form>
+</section></div>
+<%- include('../layouts/footer') %>

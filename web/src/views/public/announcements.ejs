@@ -1,0 +1,33 @@
+<%- include('../layouts/header') %>
+
+<div class="card">
+  <div class="card-title">
+    <h2>📢 Thông báo Câu lạc bộ</h2>
+  </div>
+  <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+    Các thông báo chính thức từ Ban Chủ nhiệm và Ban Điều hành CLB Tin học & Kỹ thuật Phần mềm.
+  </p>
+
+  <% if (announcements && announcements.length > 0) { %>
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <% announcements.forEach(a => { %>
+        <div style="border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; background: #fff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.15rem; color: var(--primary);"><%= a.title %></h3>
+            <span class="badge badge-published">Chính thức</span>
+          </div>
+          <div style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.75rem;">
+            📅 Ngày đăng: <%= new Date(a.published_at).toLocaleString('vi-VN') %> | 👤 Người đăng: <strong><%= a.author_name %></strong>
+          </div>
+          <div style="font-size: 0.95rem; line-height: 1.6; color: var(--secondary); white-space: pre-line;">
+            <%= a.content %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p style="color: var(--text-muted); text-align: center; padding: 2rem;">Hiện chưa có thông báo nào.</p>
+  <% } %>
+</div>
+
+<%- include('../layouts/footer') %>

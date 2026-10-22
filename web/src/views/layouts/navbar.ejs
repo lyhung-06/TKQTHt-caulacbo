@@ -1,0 +1,35 @@
+<header class="navbar">
+  <div class="nav-container">
+    <a href="/" class="brand">
+      <span class="brand-mark" aria-hidden="true">ICTU</span>
+      <span>CLB Tin học &amp; KTPM</span>
+      <span class="brand-badge">ICTU</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Trang chủ</a></li>
+      <li><a href="/events" class="<%= currentPath.startsWith('/events') ? 'active' : '' %>">Sự kiện</a></li>
+      <li><a href="/announcements" class="<%= currentPath.startsWith('/announcements') ? 'active' : '' %>">Thông báo</a></li>
+      <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">Giới thiệu</a></li>
+    </ul>
+
+    <div class="nav-auth">
+      <% if (currentUser) { %>
+        <% if (currentUser.role === 'admin') { %>
+          <a href="/admin/dashboard" class="btn btn-outline btn-sm">⚙️ Quản trị</a>
+        <% } else if (currentUser.role === 'officer') { %>
+          <a href="/officer/dashboard" class="btn btn-outline btn-sm">📋 Điều hành</a>
+        <% } else { %>
+          <a href="/member/dashboard" class="btn btn-outline btn-sm">👤 Thành viên</a>
+        <% } %>
+        <form action="/auth/logout" method="POST" style="display:inline;">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn-outline btn-sm">Đăng xuất</button>
+        </form>
+      <% } else { %>
+        <a href="/auth/login" class="btn btn-outline btn-sm">Đăng nhập</a>
+        <a href="/auth/register" class="btn btn-primary btn-sm">Đăng ký</a>
+      <% } %>
+    </div>
+  </div>
+</header>

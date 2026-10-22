@@ -1,0 +1,38 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid">
+  <%- include('_nav') %>
+  <section>
+    <div class="card">
+      <div class="section-heading"><div><p class="section-eyebrow">Cơ cấu câu lạc bộ</p><h1>Ban và nhóm công tác</h1></div></div>
+      <form method="POST" action="/admin/teams" class="form-grid">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="form-group"><label class="form-label" for="team-name">Tên ban/nhóm</label><input class="form-control" id="team-name" name="name" required maxlength="100"></div>
+        <div class="form-group"><label class="form-label" for="team-leader">Trưởng nhóm</label><select class="form-control" id="team-leader" name="leader_user_id"><option value="">Chưa phân công</option><% eligibleLeaders.forEach(user => { %><option value="<%= user.id %>"><%= user.full_name %> · <%= user.role %></option><% }) %></select></div>
+        <div class="form-group form-span"><label class="form-label" for="team-description">Mô tả</label><textarea class="form-control" id="team-description" name="description" rows="3"></textarea></div>
+        <div><button class="btn btn-primary" type="submit">Tạo ban/nhóm</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>Danh sách ban/nhóm</span></div>
+      <% if (teams.length) { %><div class="table-responsive"><table><thead><tr><th>Tên nhóm</th><th>Mô tả</th><th>Trưởng nhóm</th><th>Số thành viên</th></tr></thead><tbody>
+        <% teams.forEach(team => { %><tr><td><strong><%= team.name %></strong></td><td><%= team.description || '—' %></td><td><%= team.leader_name || 'Chưa phân công' %></td><td><%= team.member_count %></td></tr><% }) %>
+      </tbody></table></div><% } else { %><p class="empty-state">Chưa có ban/nhóm nào.</p><% } %>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>Phân công thành viên</span></div>
+      <form method="POST" action="/admin/teams/members" class="filter-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <select class="form-control" name="team_id" required><option value="">Chọn nhóm</option><% teams.forEach(team => { %><option value="<%= team.id %>"><%= team.name %></option><% }) %></select>
+        <select class="form-control" name="user_id" required><option value="">Chọn thành viên</option><% allActiveUsers.forEach(user => { %><option value="<%= user.id %>"><%= user.full_name %> · <%= user.email %></option><% }) %></select>
+        <input class="form-control" name="role_in_team" placeholder="Vai trò trong nhóm">
+        <button class="btn btn-primary" type="submit">Thêm thành viên</button>
+      </form>
+      <% if (teamMembers.length) { %><div class="table-responsive" style="margin-top:20px"><table><thead><tr><th>Nhóm</th><th>Thành viên</th><th>Vai trò</th><th>Thao tác</th></tr></thead><tbody>
+        <% teamMembers.forEach(member => { %><tr><td><%= member.team_name %></td><td><%= member.full_name %><br><small><%= member.email %></small></td><td><%= member.role_in_team || 'Thành viên ban' %></td><td><form method="POST" action="/admin/teams/<%= member.team_id %>/members/<%= member.user_id %>/delete"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-danger btn-sm" type="submit">Gỡ</button></form></td></tr><% }) %>
+      </tbody></table></div><% } %>
+    </div>
+  </section>
+</div>
+<%- include('../layouts/footer') %>

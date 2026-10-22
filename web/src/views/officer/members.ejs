@@ -1,0 +1,17 @@
+<%- include('../layouts/header') %>
+<% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+<div class="dashboard-grid"><%- include('_nav') %><section class="card">
+  <div class="section-heading"><div><p class="section-eyebrow">Cộng đồng ICTU</p><h1>Quản lý thành viên</h1></div></div>
+  <form method="GET" action="/officer/members" class="filter-form">
+    <input class="form-control" type="search" name="search" value="<%= search %>" placeholder="Tìm tên, email hoặc mã thành viên">
+    <select class="form-control" name="status"><option value="">Mọi trạng thái</option><% for (const value of ['active','pending','suspended','left']) { %><option value="<%= value %>" <%= status === value ? 'selected' : '' %>><%= value %></option><% } %></select>
+    <select class="form-control" name="team_id"><option value="">Mọi nhóm</option><% teams.forEach(team => { %><option value="<%= team.id %>" <%= String(team_id) === String(team.id) ? 'selected' : '' %>><%= team.name %></option><% }) %></select>
+    <button class="btn btn-primary" type="submit">Lọc</button><a class="btn btn-outline" href="/officer/members">Xóa lọc</a>
+  </form>
+  <% if (members.length) { %><div class="table-responsive"><table><thead><tr><th>Thành viên</th><th>Liên hệ</th><th>Nhóm</th><th>Ngày tham gia</th><th>Trạng thái &amp; vị trí</th><th></th></tr></thead><tbody>
+    <% members.forEach(member => { %><tr><td><strong><%= member.full_name %></strong><br><small><%= member.member_code || 'Chưa cấp mã' %></small></td><td><%= member.email %><br><small><%= member.phone || '' %></small></td><td><%= member.team_name || '—' %></td><td><%= member.joined_at ? new Date(member.joined_at).toLocaleDateString('vi-VN') : '—' %></td>
+      <td><form method="POST" action="/officer/members/<%= member.id %>/status" class="inline-form"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><select class="form-control" name="status" aria-label="Trạng thái"><% for (const value of ['active','pending','suspended','left']) { %><option value="<%= value %>" <%= member.membership_status === value ? 'selected' : '' %>><%= value %></option><% } %></select><input class="form-control" name="position" value="<%= member.position || 'Thành viên' %>" aria-label="Vị trí"><button class="btn btn-outline btn-sm" type="submit">Lưu</button></form></td><td><%= member.role %><%= member.is_active ? '' : ' · Tài khoản khóa' %></td></tr><% }) %>
+  </tbody></table></div><% } else { %><p class="empty-state">Không tìm thấy thành viên phù hợp.</p><% } %>
+</section></div>
+<%- include('../layouts/footer') %>
